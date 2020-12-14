@@ -40,7 +40,7 @@ pub async fn get_or_create_bridge_cell(
         .ckb_key_channel
         .1
         .clone()
-        .recv_timeout(Duration::from_secs(600))?;
+        .recv_timeout(Duration::from_secs(1200))?;
     let outpoints = to_ckb::get_or_create_bridge_cell(
         data.config_path.clone(),
         data.network.clone(),
@@ -134,7 +134,7 @@ pub async fn relay_eth_to_ckb_proof(
             .ckb_key_channel
             .1
             .clone()
-            .recv_timeout(Duration::from_secs(600))
+            .recv_timeout(Duration::from_secs(1200))
             .map_err(|e| format!("crossbeam channel recv ckb key path error: {:?}", e))?;
         let force_config =
             ForceConfig::new(data.config_path.as_str()).expect("get force config succeed");
@@ -227,7 +227,7 @@ pub async fn burn(
             .eth_key_channel
             .1
             .clone()
-            .recv_timeout(Duration::from_secs(600))
+            .recv_timeout(Duration::from_secs(1200))
             .map_err(|e| format!("crossbeam channel recv ckb key path error: {:?}", e))?;
         for i in 0u8..10 {
             let res = handler::relay_ckb_to_eth_proof(
