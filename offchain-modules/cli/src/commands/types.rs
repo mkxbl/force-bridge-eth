@@ -9,6 +9,7 @@ pub struct Opts {
 
 #[derive(Clap, Clone, Debug)]
 pub enum SubCommand {
+    AddAccounts(AddAccountsArgs),
     Server(ServerArgs),
     InitCkbLightContract(InitCkbLightContractArgs),
     InitConfig(InitConfigArgs),
@@ -31,6 +32,18 @@ pub enum SubCommand {
     EthRelay(EthRelayArgs),
     CkbRelay(CkbRelayArgs),
     RelayerMonitor(RelayerMonitorArgs),
+}
+
+#[derive(Clap, Clone, Debug)]
+pub struct AddAccountsArgs {
+    #[clap(long, default_value = "~/.force-bridge/config.toml")]
+    pub config_path: String,
+    #[clap(long)]
+    pub network: Option<String>,
+    #[clap(short = 'n', long)]
+    pub number: u64,
+    #[clap(short = 'c', long)]
+    pub capacity: u64,
 }
 
 #[derive(Clap, Clone, Debug)]

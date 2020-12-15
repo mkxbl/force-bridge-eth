@@ -28,6 +28,19 @@ use std::convert::{TryFrom, TryInto};
 use std::ops::Add;
 use std::str::FromStr;
 use web3::types::{Block, BlockHeader};
+use rand::Rng;
+
+pub fn create_secret_key() -> Result<(String, secp256k1::SecretKey)> {
+    let mut rng = rand::thread_rng();
+    for _ in 0..1024 {
+        let privkey_bytes: [u8; 32] = rng.gen();
+        if let Ok(secp_secret_key) = secp256k1::SecretKey::from_slice(&privkey_bytes) {
+            let privkey_hex = hex::encode(privkey_bytes);
+            return Ok((privkey_hex, secp_secret_key));
+        }
+    }
+    bail!("what?")
+}
 
 pub fn get_secret_key(privkey_string: &str) -> Result<secp256k1::SecretKey> {
     let privkey_bytes = hex::decode(clear_0x(privkey_string))?;

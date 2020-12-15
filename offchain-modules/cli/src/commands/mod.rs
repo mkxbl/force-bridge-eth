@@ -11,7 +11,7 @@ use force_eth_lib::transfer::to_eth::{
     wait_block_submit,
 };
 use force_eth_lib::util::ckb_tx_generator::Generator;
-use force_eth_lib::util::ckb_util::parse_privkey_path;
+use force_eth_lib::util::ckb_util::{parse_privkey_path, create_secret_key};
 use force_eth_lib::util::config::{self, ForceConfig};
 use force_eth_lib::util::eth_util::{convert_eth_address, parse_private_key};
 use force_eth_lib::util::transfer;
@@ -25,6 +25,7 @@ pub mod types;
 
 pub async fn handler(opt: Opts) -> Result<()> {
     match opt.subcmd {
+        SubCommand::AddAccounts(args) => add_accounts(args).await,
         SubCommand::Server(args) => server::server_handler(args).await,
         SubCommand::InitCkbLightContract(args) => init_ckb_light_contract_handler(args).await,
         SubCommand::InitConfig(args) => init_config(args).await,
@@ -55,6 +56,16 @@ pub async fn handler(opt: Opts) -> Result<()> {
         SubCommand::CkbRelay(args) => ckb_relay_handler(args).await,
         SubCommand::RelayerMonitor(args) => relayer_monitor(args).await,
     }
+}
+
+pub async fn add_accounts(args: AddAccountsArgs) -> Result<()> {
+    let number = args.number;
+    let capacity = args.capacity;
+    for i in 0..number {
+        let(priv_hex, secret_key) = create_secret_key()?;
+        println!("{}", priv_hex);
+    }
+    Ok(())
 }
 
 pub async fn init_ckb_light_contract_handler(args: InitCkbLightContractArgs) -> Result<()> {
