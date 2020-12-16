@@ -14,13 +14,13 @@ async function main() {
 
   let promises = [];
   let addresses = [];
-  const addition = 4;
+  const addition = 50;
   let i = 0;
   while (i < addition) {
     let wallet = ethers.Wallet.createRandom();
     let address = wallet.address;
     addresses.push(address);
-    let value = ethers.utils.parseEther("0.789");
+    let value = ethers.utils.parseEther("1");
     let promise = await sender.sendTransaction({
       to: address,
       value: value,
@@ -33,16 +33,17 @@ async function main() {
     i++;
   }
   console.log(accounts);
+  console.log(addresses);
   await Promise.all(promises);
-  for (const address of addresses) {
-    let balance = await provider.getBalance(address);
-    console.log(address, balance.toString());
-  }
-
-  network.ethereum_private_keys = accounts;
-  const new_config = TOML.stringify(forceConfig);
-  fs.writeFileSync(forceConfigPath, new_config);
-  console.error("write eth addr into config successfully");
+  // for (const address of addresses) {
+  //   let balance = await provider.getBalance(address);
+  //   console.log(address, balance.toString());
+  // }
+  //
+  // network.ethereum_private_keys = accounts;
+  // const new_config = TOML.stringify(forceConfig);
+  // fs.writeFileSync(forceConfigPath, new_config);
+  // console.error("write eth addr into config successfully");
 }
 
 main()
