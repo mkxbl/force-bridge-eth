@@ -14,7 +14,7 @@ use force_eth_lib::util::ckb_tx_generator::Generator;
 use force_eth_lib::util::ckb_util::{parse_privkey_path, create_secret_key};
 use force_eth_lib::util::config::{self, ForceConfig};
 use force_eth_lib::util::eth_util::{convert_eth_address, parse_private_key};
-use force_eth_lib::util::transfer;
+use force_eth_lib::util::{transfer, airdrop};
 use log::{debug, error, info};
 use serde_json::json;
 use shellexpand::tilde;
@@ -59,12 +59,21 @@ pub async fn handler(opt: Opts) -> Result<()> {
 }
 
 pub async fn add_accounts(args: AddAccountsArgs) -> Result<()> {
+    let mut config = ForceConfig::new(args.config_path.as_str())?;
     let number = args.number;
     let capacity = args.capacity;
+    let mut accounts = vec![];
+    let mut ckb_accounts = config.get_ckb_private_keys(&args.network)?;
+    let mut secret_keys = vec![];
     for i in 0..number {
         let(priv_hex, secret_key) = create_secret_key()?;
-        println!("{}", priv_hex);
+        accounts.push(priv_hex);
+        secret_keys.push(secret_key);
     }
+    let tx = airdrop(args.config_path, args.network, secret_keys, capacity).await?;
+    ckb_accounts.extend(accounts);
+    println!("ckb accounts: {:?}", ckb_accounts);
+    println!("tx:{}", tx);
     Ok(())
 }
 

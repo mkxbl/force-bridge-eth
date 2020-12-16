@@ -43,7 +43,7 @@ pub struct AddAccountsArgs {
     #[clap(short = 'n', long)]
     pub number: u64,
     #[clap(short = 'c', long)]
-    pub capacity: u64,
+    pub capacity: String,
 }
 
 #[derive(Clap, Clone, Debug)]
